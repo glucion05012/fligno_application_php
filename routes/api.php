@@ -26,7 +26,7 @@ Route::put('/update/{id}', 'ProfileController@update');
 // DELETE API
 Route::delete('/delete/{id}', 'ProfileController@delete');
 //GET ID API
-Route::get('/read/{id}', 'ProfileController@readID');
+Route::get('/edit/{id}', 'ProfileController@readID');
 
 
 
