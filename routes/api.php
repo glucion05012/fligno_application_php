@@ -19,6 +19,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 // CREATE API
 Route::post('/create', 'ProfileController@create');
+Route::get('/emailCheck/{email}', 'ProfileController@emailCheck');
+
 // READ ALL API
 Route::get('/read', 'ProfileController@read');
 // UPDATE API
@@ -27,6 +29,13 @@ Route::put('/update/{id}', 'ProfileController@update');
 Route::delete('/delete/{id}', 'ProfileController@delete');
 //GET ID API
 Route::get('/edit/{id}', 'ProfileController@readID');
+
+
+//SEND EMAIL
+Route::get('/sendEmail/{email}', 'ProfileController@send');
+
+Route::get('/confirmRegistration/{token}', 'ProfileController@confirmRegistration');
+
 
 
 
