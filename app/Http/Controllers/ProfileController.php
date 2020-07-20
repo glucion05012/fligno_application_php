@@ -11,6 +11,14 @@ class ProfileController extends Controller
 {
 
 
+     //subscription PAYPAL
+    public function subscribe($id){
+        Profile::where('id', $id)
+        ->update(['isConfirmed' => 2]);
+        
+        return response('Profile Verified!');
+    }
+
     //send sms
     public function itexmo($contact){
 
@@ -123,10 +131,12 @@ class ProfileController extends Controller
 
     }
 
-    // emailCheck
+    // emailContactCheck
 
-     public function emailCheck($email){
-    	$profile = Profile::where('email',$email) -> first();
+     public function emailCheck($email, $contact){
+        $profile = Profile::where('email',$email) 
+        -> orWhere('contact', $contact)
+        -> first();
 
     	return response()->json($profile);
     }

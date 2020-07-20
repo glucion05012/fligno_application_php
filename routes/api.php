@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Http\Request;
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -19,7 +18,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 // CREATE API
 Route::post('/create', 'ProfileController@create');
-Route::get('/emailCheck/{email}', 'ProfileController@emailCheck');
+Route::get('/emailCheck/{email}/{contact}', 'ProfileController@emailCheck');
 
 // READ ALL API
 Route::get('/read', 'ProfileController@read');
@@ -39,5 +38,9 @@ Route::get('/confirmRegistration/{token}', 'ProfileController@confirmRegistratio
 Route::get('/sendSMS/{contact}', 'ProfileController@itexmo');
 Route::get('/SMSverify/{id}', 'ProfileController@SMSverify');
 
+//PAYPAL API
+Route::post('create-payment', 'PaypalController@create');
+Route::post('execute-payment', 'PaypalController@execute');
 
+Route::get('/subscribe/{id}', 'ProfileController@subscribe');
 
