@@ -10,6 +10,46 @@ use App\Mail\SendMail;
 class ProfileController extends Controller
 {
 
+
+    //send sms
+    public function itexmo($contact){
+
+        $profile = Profile::where('contact',$contact) -> first();
+        $message = 'Verification Code: ' . $profile->SMStoken;
+
+		$url = 'https://www.itexmo.com/php_api/api.php';
+		$itexmo = array('1' => $contact, '2' => $message, '3' => 'TR-SCARL721191_CTY6R', 'passwd' => '}x[g$kaqd8');
+		$param = array(
+			'http' => array(
+				'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
+				'method'  => 'POST',
+				'content' => http_build_query($itexmo),
+			),
+		);
+		$context  = stream_context_create($param);
+        $result = file_get_contents($url, false, $context);
+        
+        if ($result == ""){
+        return response("iTexMo: No response from server!!!
+        Please check the METHOD used (CURL or CURL-LESS). If you are using CURL then try CURL-LESS and vice versa.	
+        Please CONTACT US for help. ");	
+        }else if ($result == 0){
+        return response('message sent!');
+        }
+        else{	
+        return response("Error Num ". $result . " was encountered!");
+        }
+    }
+
+    //confirm registration sms
+    public function SMSverify($id){
+        Profile::where('id', $id)
+        ->update(['isConfirmed' => 1, 'token' => '', 'SMStoken' => '']);
+        
+        return response('Profile Verified!');
+    }
+    
+
     // send email
     public function send($email){
     
@@ -28,10 +68,10 @@ class ProfileController extends Controller
         
     }
 
-    //confirm registration
+    //confirm registration email
     public function confirmRegistration($token){
         Profile::where('token', $token)
-        ->update(['isConfirmed' => 1, 'token' => '']);
+        ->update(['isConfirmed' => 1, 'token' => '', 'SMStoken' => '']);
         
         return response('Profile Verified!');
     }
@@ -43,19 +83,24 @@ class ProfileController extends Controller
     	$this->validate($request, [
     		'name' => 'required',
             'address' => 'required',
+            'age' => 'required',
+            'contact' => 'required',
             'email' => 'required',
-            'age' => 'required'
+            
     	]);
 
         //Generate a random string.
         $token = bin2hex(openssl_random_pseudo_bytes(16));
+        $SMStoken = rand ( 1000 , 9999 );
         
         $profile = new Profile;
     	$profile->name = $request->input('name');
         $profile->address = $request->input('address');
-        $profile->email = $request->input('email');
         $profile->age = $request->input('age');
+        $profile->contact = $request->input('contact');
+        $profile->email = $request->input('email');  
         $profile->token = $token;
+        $profile->SMStoken = $SMStoken;
         $profile->isConfirmed = 0;
 
         $profile->save();
@@ -91,15 +136,19 @@ class ProfileController extends Controller
     	$this->validate($request, [
     		'name' => 'required',
             'address' => 'required',
+            'age' => 'required',
+            'contact' => 'required',
             'email' => 'required',
-            'age' => 'required'
+            
         ]);
         
     	$profile = array(
     		'name' => $request->input('name'),
             'address' => $request->input('address'),
+            'age' => $request->input('age'),
+            'contact' => $request->input('contact'),
             'email' => $request->input('email'),
-    		'age' => $request->input('age')
+    		
         );
         
     	Profile::where('id', $id)

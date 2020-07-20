@@ -18,8 +18,10 @@ class CreateProfilesTable extends Migration
             $table->string('name');
             $table->string('address');
             $table->integer('age');
+            $table->string('contact');
             $table->string('email');
             $table->string('token');
+            $table->string('SMStoken');
             $table->tinyInteger('isConfirmed');
             $table->timestamps();
         });

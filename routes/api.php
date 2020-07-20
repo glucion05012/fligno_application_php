@@ -33,9 +33,11 @@ Route::get('/edit/{id}', 'ProfileController@readID');
 
 //SEND EMAIL
 Route::get('/sendEmail/{email}', 'ProfileController@send');
-
 Route::get('/confirmRegistration/{token}', 'ProfileController@confirmRegistration');
 
+// SEND SMS
+Route::get('/sendSMS/{contact}', 'ProfileController@itexmo');
+Route::get('/SMSverify/{id}', 'ProfileController@SMSverify');
 
 
 
